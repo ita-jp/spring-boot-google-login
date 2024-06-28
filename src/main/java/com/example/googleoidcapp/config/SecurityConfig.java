@@ -13,10 +13,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/").permitAll()
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2Login -> oauth2Login
+                        .loginPage("/oauth2/authorization/google")
                 );
         return http.build();
     }
