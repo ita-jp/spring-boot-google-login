@@ -2,14 +2,20 @@
 <html
         lang="ja"
         xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
 <head>
     <title>トップページ</title>
 </head>
 <body>
 <h1>ようこそ！</h1>
-<p><a th:href="@{/login}">ログイン</a></p>
-<p><a th:href="@{/logout}">ログアウト</a></p>
-<p><a th:href="@{/users/me}">マイページ</a></p>
+<p>ログインユーザー：<span>ゲスト</span>さん</p>
+<p sec:authorize="!isAuthenticated()">
+    <a th:href="@{/login}">ログイン</a>
+    または
+    <a th:href="@{/register}">新規登録</a>
+</p>
+<p sec:authorize="isAuthenticated()"><a th:href="@{/logout}">ログアウト</a></p>
+<p sec:authorize="isAuthenticated()"><a th:href="@{/users/me}">アカウント設定</a></p>
 </body>
 </html>
