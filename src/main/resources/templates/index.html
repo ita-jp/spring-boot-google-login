@@ -16,6 +16,5 @@
     <a th:href="@{/register}">新規登録</a>
 </p>
 <p sec:authorize="isAuthenticated()"><a th:href="@{/logout}">ログアウト</a></p>
-<p sec:authorize="isAuthenticated()"><a th:href="@{/users/me}">アカウント設定</a></p>
 </body>
 </html>
