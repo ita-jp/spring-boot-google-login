@@ -6,3 +6,18 @@ spring:
           google:
             client-id: ${OAUTH_GOOGLE_CLIENT_ID}
             client-secret: ${OAUTH_GOOGLE_CLIENT_SECRET}
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG
+        security:
+          oauth2:
+            client:
+              web:
+                OAuth2AuthorizationRequestRedirectFilter: TRACE
+                OAuth2LoginAuthenticationFilter: TRACE
+                OAuth2AuthorizationCodeGrantFilter: TRACE
+                OAuth2AccessTokenResponseClient: TRACE
