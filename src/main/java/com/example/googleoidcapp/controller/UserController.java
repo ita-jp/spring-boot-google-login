@@ -1,4 +1,4 @@
-package com.example.googleoidcapp.controller.user;
+package com.example.googleoidcapp.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

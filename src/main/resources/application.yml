@@ -21,3 +21,7 @@ logging:
                 OAuth2LoginAuthenticationFilter: TRACE
                 OAuth2AuthorizationCodeGrantFilter: TRACE
                 OAuth2AccessTokenResponseClient: TRACE
+    com:
+      example:
+        googleoidcapp:
+          repository: TRACE
