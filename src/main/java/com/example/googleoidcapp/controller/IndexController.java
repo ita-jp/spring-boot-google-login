@@ -46,7 +46,6 @@ public class IndexController {
         }
 
         userService.registerUserWithSocialLogin(username, socialLogin.provider(), socialLogin.subject());
-
-        return "redirect:/login";
+        return "redirect:/oauth2/authorization/" + socialLogin.provider();
     }
 }
