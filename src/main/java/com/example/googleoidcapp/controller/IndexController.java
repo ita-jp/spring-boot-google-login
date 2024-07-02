@@ -40,8 +40,7 @@ public class IndexController {
 
     @PostMapping("/register-profile")
     public String register(HttpSession session, String username) {
-        var socialLogin = (SocialLoginSessionData) session.getAttribute(SocialLoginSessionData.SESSION_ATTRIBUTE_NAME);
-
+        var socialLogin = SocialLoginSessionData.from(session);
         if (socialLogin == null) {
             return "redirect:/register";
         }
