@@ -5,11 +5,13 @@ import com.example.googleoidcapp.service.LoggedInUser;
 import com.example.googleoidcapp.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,7 +26,10 @@ public class IndexController {
     }
 
     @GetMapping("/login")
-    public String showLogin() {
+    public String showLogin(@RequestParam(value = "logout", required = false) String logout, Model model) {
+        if (logout != null) {
+            model.addAttribute("isLogoutSuccess", true);
+        }
         return "login";
     }
 
