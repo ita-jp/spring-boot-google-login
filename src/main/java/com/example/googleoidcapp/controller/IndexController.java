@@ -28,6 +28,11 @@ public class IndexController {
         return "login";
     }
 
+    @GetMapping("/logout")
+    public String showLogout() {
+        return "logout";
+    }
+
     @GetMapping("/register")
     public String showRegistration() {
         return "register";
