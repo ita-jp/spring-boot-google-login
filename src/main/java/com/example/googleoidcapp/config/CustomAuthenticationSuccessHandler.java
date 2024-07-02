@@ -25,6 +25,27 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             HttpServletResponse response,
             Authentication authentication
     ) throws IOException {
+        var socialLoginSessionData = buildSocialLoginSessionData(authentication);
+
+        if (Strings.isBlank(socialLoginSessionData.provider()) || Strings.isBlank(socialLoginSessionData.subject())) {
+            response.sendRedirect("/error");
+            return;
+        }
+
+        if (isRegisteredUser(socialLoginSessionData.subject())) {
+            response.sendRedirect("/");
+            return;
+        }
+
+        request.getSession().setAttribute(SocialLoginSessionData.SESSION_ATTRIBUTE_NAME, socialLoginSessionData);
+        response.sendRedirect("/register-profile");
+    }
+
+    private boolean isRegisteredUser(String subject) {
+        return userSocialLoginRepository.selectBySubject(subject).isPresent();
+    }
+
+    private SocialLoginSessionData buildSocialLoginSessionData(Authentication authentication) {
         String clientRegistrationId = "";
         if (authentication instanceof OAuth2AuthenticationToken oauth2Token) {
             clientRegistrationId = oauth2Token.getAuthorizedClientRegistrationId();
@@ -35,25 +56,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             subject = oidcUser.getSubject();
         }
 
-        if (Strings.isBlank(clientRegistrationId) || Strings.isBlank(subject)) {
-            response.sendRedirect("/error");
-            return;
-        }
-
-        if (isRegisteredUser(subject)) {
-            response.sendRedirect("/");
-            return;
-        }
-
-        request.getSession().setAttribute(
-                SocialLoginSessionData.SESSION_ATTRIBUTE_NAME,
-                new SocialLoginSessionData(clientRegistrationId, subject)
-        );
-
-        response.sendRedirect("/register-profile");
-    }
-
-    private boolean isRegisteredUser(String subject) {
-        return userSocialLoginRepository.selectBySubject(subject).isPresent();
+        return new SocialLoginSessionData(clientRegistrationId, subject);
     }
 }
