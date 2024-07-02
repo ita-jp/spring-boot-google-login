@@ -1,5 +1,6 @@
 package com.example.googleoidcapp.config;
 
+import com.example.googleoidcapp.service.CustomOidcUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final CustomOidcUserService customOidcUserService;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -25,6 +27,9 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
+                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
+                                .oidcUserService(customOidcUserService)
+                        )
                         .successHandler(customAuthenticationSuccessHandler)
                 )
                 .logout(logout -> logout

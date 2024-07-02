@@ -1,10 +1,13 @@
 package com.example.googleoidcapp.controller;
 
 import com.example.googleoidcapp.config.SocialLoginSessionData;
+import com.example.googleoidcapp.service.LoggedInUser;
 import com.example.googleoidcapp.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -15,7 +18,8 @@ public class IndexController {
     private final UserService userService;
 
     @GetMapping("/")
-    public String index() {
+    public String index(@AuthenticationPrincipal LoggedInUser user, Model model) {
+        model.addAttribute("loggedInUser", user);
         return "index";
     }
 
