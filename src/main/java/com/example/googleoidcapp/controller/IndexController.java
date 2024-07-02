@@ -1,5 +1,6 @@
 package com.example.googleoidcapp.controller;
 
+import com.example.googleoidcapp.config.SocialLoginSessionData;
 import com.example.googleoidcapp.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -35,14 +36,13 @@ public class IndexController {
 
     @PostMapping("/register-profile")
     public String register(HttpSession session, String username) {
-        var subject = (String) session.getAttribute("subject");
-        var provider = (String) session.getAttribute("provider");
+        var socialLogin = (SocialLoginSessionData) session.getAttribute(SocialLoginSessionData.SESSION_ATTRIBUTE_NAME);
 
-        if (subject == null || provider == null) {
+        if (socialLogin == null) {
             return "redirect:/register";
         }
 
-        userService.registerUserWithSocialLogin(username, provider, subject);
+        userService.registerUserWithSocialLogin(username, socialLogin.provider(), socialLogin.subject());
 
         return "redirect:/login";
     }

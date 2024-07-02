@@ -4,7 +4,9 @@ import com.example.googleoidcapp.repository.UserSocialLoginRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -23,16 +25,31 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             HttpServletResponse response,
             Authentication authentication
     ) throws IOException {
-        var oidcUser = (OidcUser) authentication.getPrincipal();
-        var subject = oidcUser.getSubject();
+        String clientRegistrationId = "";
+        if (authentication instanceof OAuth2AuthenticationToken oauth2Token) {
+            clientRegistrationId = oauth2Token.getAuthorizedClientRegistrationId();
+        }
+
+        String subject = "";
+        if (authentication.getPrincipal() instanceof OidcUser oidcUser) {
+            subject = oidcUser.getSubject();
+        }
+
+        if (Strings.isBlank(clientRegistrationId) || Strings.isBlank(subject)) {
+            response.sendRedirect("/error");
+            return;
+        }
 
         if (isRegisteredUser(subject)) {
             response.sendRedirect("/");
             return;
         }
 
-        request.getSession().setAttribute("subject", subject);
-        request.getSession().setAttribute("provider", "google");
+        request.getSession().setAttribute(
+                SocialLoginSessionData.SESSION_ATTRIBUTE_NAME,
+                new SocialLoginSessionData(clientRegistrationId, subject)
+        );
+
         response.sendRedirect("/register-profile");
     }
 
