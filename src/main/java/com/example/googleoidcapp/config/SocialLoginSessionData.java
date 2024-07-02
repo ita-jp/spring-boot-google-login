@@ -12,4 +12,8 @@ public record SocialLoginSessionData(
     public static SocialLoginSessionData from(HttpSession session) {
         return (SocialLoginSessionData) session.getAttribute(SESSION_ATTRIBUTE_NAME);
     }
+
+    public boolean isBlankAny() {
+        return provider.isBlank() || subject.isBlank();
+    }
 }

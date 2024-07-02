@@ -26,8 +26,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             Authentication authentication
     ) throws IOException {
         var socialLoginSessionData = buildSocialLoginSessionData(authentication);
-
-        if (Strings.isBlank(socialLoginSessionData.provider()) || Strings.isBlank(socialLoginSessionData.subject())) {
+        if (socialLoginSessionData.isBlankAny()) {
             response.sendRedirect("/error");
             return;
         }
