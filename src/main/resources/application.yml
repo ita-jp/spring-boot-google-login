@@ -13,14 +13,13 @@ logging:
         web:
           client:
             RestTemplate: DEBUG
-        security: TRACE
-#          oauth2:
-#            client:
-#              web:
-#                OAuth2AuthorizationRequestRedirectFilter: TRACE
-#                OAuth2LoginAuthenticationFilter: TRACE
-#                OAuth2AuthorizationCodeGrantFilter: TRACE
-#                OAuth2AccessTokenResponseClient: TRACE
+        security:
+          oauth2:
+            client:
+              web:
+                OAuth2AuthorizationRequestRedirectFilter: TRACE
+                OAuth2LoginAuthenticationFilter: TRACE
+                OAuth2AccessTokenResponseClient: TRACE
     com:
       example:
         googleoidcapp:
