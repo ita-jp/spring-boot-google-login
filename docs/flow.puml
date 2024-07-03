@@ -1,0 +1,50 @@
+@startuml
+actor ユーザー as User
+participant ブラウザ as Browser
+participant "(RP: Relying Party)\nSpring アプリケーション" as Server
+participant "(IDP: Identity Provider)\nGoogle" as Google
+
+User -> Browser: ログインボタンをクリック
+activate Browser
+Browser -> Server: GET /oauth2/authorization/google
+activate Server
+note right #TECHNOLOGY: OAuth2AuthorizationRequestRedirectFilter
+Server -> Server: 認可リクエストを作る
+Server --> Browser: 302 Redirect
+deactivate Server
+
+Browser -> Google: GET https://accounts.google.com/o/oauth2/v2/auth
+activate Google
+note right: 認可エンドポイント
+Google --> Browser: Google の認証画面を返却
+deactivate Google
+Browser --> User: Google の認証画面を表示
+deactivate Browser
+
+User -> Browser: 認証&同意
+activate Browser
+Browser -> Google: 認証&同意
+activate Google
+Google -> Google: 認可コードを発行する
+Google --> Browser: 302 Redirect
+deactivate Google
+Browser -> Server: GET /login/oauth2/code/google
+note right: リダイレクションURI
+activate Server
+note right #TECHNOLOGY: OAuth2LoginAuthenticationFilter
+Server -> Google: （受け取った認可コードとクライアントシークレットを付与）\nPOST https://www.googleapis.com/oauth2/v4/token
+note right: トークンエンドポイント
+activate Google
+Google -> Google: 認可コードを検証する
+Google --> Server: アクセストークンとIDトークンを返す
+deactivate Google
+Server -> Server: IDトークンを検証する
+Server -> Server: IDトークンから Subject※ を取り出す\n ※Google 内でのユーザーのID
+Server -> Server: 認証成功を保存
+Server --> Browser: ログイン済みの画面を返却
+deactivate Server
+Browser --> User: ログイン済みの画面を表示
+deactivate Server
+deactivate Browser
+
+@enduml
